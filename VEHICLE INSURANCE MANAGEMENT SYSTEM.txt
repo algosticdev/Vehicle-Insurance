@@ -1,0 +1,826 @@
+Imagine a vehicle insurance company. People come in and want to
+insure their cars. Right now, everything is done on paper. The
+agent writes down the customer name, car details, policy number,
+payment date, claim information, and so on. This is very slow,
+error-prone, and hard to manage.
+
+The company said: "Let us build a software system so that all
+insurance records are stored digitally. Any authorized employee
+can open the system, search a customer, generate a policy, track
+a claim, and print a bill in seconds."
+
+That software is called the Vehicle Insurance Management System.
+
+So in simple words:
+This is a web application for a vehicle insurance company. It
+handles:
+- Registering customers and their vehicles
+- Creating insurance policies for customers
+- Generating estimates (quotes) before buying a policy
+- Processing payments and generating bills
+- Handling accident claims
+- Tracking company expenses
+- Generating reports for management
+
+					----------------------------------------------------------------
+ROLES
+
+In this system, there are 2 main roles:
+
+
+ROLE 1: ADMIN / EMPLOYEE (The Insurance Company Staff)
+-------------------------------------------------------
+This is the most powerful user. The admin manages everything
+happening inside the company.
+
+What the Admin can do:
+- Login to the admin panel with admin username and password
+- Add, edit, delete customer records
+- Add and manage vehicle information
+- Create and manage insurance policies
+- Generate and manage billing documents
+- Handle and approve insurance claims
+- Record company expenses
+- View and generate all reports
+- Manage policy renewals and lapsed policies
+
+Admin Panel Contains:
+- Dashboard (overview of active policies, pending claims,
+  revenue, upcoming renewals)
+- Customer Management
+- Vehicle Management
+- Estimate / Quote Management
+- Insurance Policy Management
+- Billing Management
+- Claims Management
+- Company Expenses
+- Reports Section
+
+
+ROLE 2: CUSTOMER (The Vehicle Owner Who Buys Insurance)
+---------------------------------------------------------
+The customer registers on the online portal and can manage
+their own insurance from their panel.
+
+What the Customer can do:
+- Register on the portal with their information
+- Login with their unique username and password
+- Change their password
+- Purchase a vehicle insurance policy online by filling
+  an application form
+- Make payment online for the policy
+- Download and save a copy of their policy document
+- Initiate / file a claim when an accident happens by
+  filling the claim form
+- View their policy status and billing history
+
+Customer Panel Contains:
+- My Profile
+- Buy New Policy (application form + payment)
+- My Policies (active and expired)
+- File a Claim (claim form)
+- My Claims (status of filed claims)
+- Payment History / Bills
+
+							----------------------------------------------------------------
+
+PROJECT FLOW
+STEP 1: Customer registers on the portal
+A vehicle owner visits the insurance company website. They fill
+in a registration form with their personal details and create a
+username and password. Their account is created.
+
+STEP 2: Customer requests an estimate / quote
+Before buying a policy, the customer wants to know how much it
+will cost. They provide their vehicle details and the system
+generates an estimate. This estimate shows the vehicle rate,
+policy type, warranty, and premium amount.
+
+STEP 3: Customer fills the insurance application form
+The customer decides to buy a policy. They fill in the online
+application form which captures all required information:
+personal details, vehicle details, policy type, policy duration.
+
+STEP 4: Customer makes payment online
+The customer pays the premium amount online. On successful
+payment, the policy is activated in the system.
+
+STEP 5: Policy document is generated
+The system generates a policy document with a unique policy
+number, policy start and end date, and all vehicle and customer
+details. The customer can download and save this.
+
+STEP 6: Admin manages the policy records
+The admin (employee) logs into the admin panel and can see all
+active policies, their payment schedules, and upcoming renewals.
+
+STEP 7: Customer files a claim (if accident happens)
+If the customer's vehicle is in an accident, they log in and
+fill the claim form with: place of accident, date of accident,
+description of damage, and the claimable amount.
+
+STEP 8: Admin processes the claim
+The admin reviews the claim, verifies the policy details, checks
+if it is within the policy period, and approves or rejects the
+claim. The claimable amount is processed.
+
+STEP 9: Company records its expenses
+The admin records all internal company expenses: type of expense,
+amount, and date. This helps in financial tracking.
+
+STEP 10: Reports are generated for management
+At the end of the month, the admin generates reports:
+- How many policies were sold
+- Which vehicle type had the most policies
+- How many claims were filed and approved
+- Which policies are due for renewal
+- Which policies have lapsed (expired without renewal)
+
+	----------------------------------------------------------------
+
+DATABASE MODELS
+
+
+MODEL 1: User
+--------------
+Stores all users of the system (admin and customers).
+
+Fields:
+- id
+- name
+- email
+- username
+- password (hashed)
+- role (admin or customer)
+- phone
+- created_at
+- updated_at
+
+
+MODEL 2: Customer
+------------------
+Stores detailed customer profile information.
+
+Fields:
+- id
+- user_id (links to User)
+- customer_name
+- address
+- phone_number
+- address_proof (document reference)
+- created_at
+- updated_at
+
+
+MODEL 3: Vehicle
+-----------------
+Stores all vehicle information belonging to a customer.
+
+Fields:
+- id
+- customer_id (links to Customer)
+- vehicle_name
+- owner_name
+- vehicle_model
+- vehicle_version
+- vehicle_rate (value of the vehicle)
+- body_number
+- engine_number
+- vehicle_number (registration number)
+- created_at
+- updated_at
+
+
+MODEL 4: Estimate
+------------------
+Stores the insurance estimate / quote generated for a customer
+before they buy a policy.
+
+Fields:
+- id
+- customer_id (links to Customer)
+- estimate_number (unique)
+- customer_name
+- phone_number
+- vehicle_name
+- vehicle_model
+- vehicle_rate
+- vehicle_warranty
+- policy_type (comprehensive / third-party / etc.)
+- estimated_premium_amount
+- created_at
+- updated_at
+
+
+MODEL 5: InsurancePolicy
+--------------------------
+Stores the actual policy record after the customer purchases it.
+
+Fields:
+- id
+- customer_id (links to Customer)
+- vehicle_id (links to Vehicle)
+- policy_number (unique)
+- policy_date (start date)
+- policy_duration (in months or years)
+- policy_end_date
+- policy_type
+- vehicle_rate
+- vehicle_warranty
+- body_number
+- engine_number
+- vehicle_number
+- vehicle_name
+- vehicle_model
+- vehicle_version
+- address_proof
+- status (active / expired / lapsed / cancelled)
+- created_at
+- updated_at
+
+
+MODEL 6: Billing
+-----------------
+Stores payment and billing records for each policy.
+
+Fields:
+- id
+- customer_id (links to Customer)
+- policy_id (links to InsurancePolicy)
+- bill_number (unique)
+- vehicle_name
+- vehicle_model
+- vehicle_rate
+- body_number
+- engine_number
+- amount
+- payment_date
+- address_proof
+- created_at
+- updated_at
+
+
+MODEL 7: Claim
+---------------
+Stores insurance claim details filed by customers.
+
+Fields:
+- id
+- claim_number (unique)
+- policy_id (links to InsurancePolicy)
+- policy_number
+- policy_start_date
+- policy_end_date
+- customer_name
+- place_of_accident
+- date_of_accident
+- insured_amount
+- claimable_amount
+- status (pending / approved / rejected)
+- processed_by (links to admin User)
+- created_at
+- updated_at
+
+
+MODEL 8: CompanyExpense
+------------------------
+Stores company's internal expenses for financial tracking.
+
+Fields:
+- id
+- date_of_expense
+- type_of_expense
+- amount_of_expense
+- recorded_by (links to admin User)
+- created_at
+- updated_at
+
+
+MODEL 9: Report (Generated dynamically from existing data)
+-----------------------------------------------------------
+Reports are generated from the data above. No separate table
+is strictly needed, but if snapshots are required:
+
+Fields:
+- id
+- report_type (monthly_sales / vehicle_wise / claims /
+               renewals_due / lapsed_policies)
+- generated_by
+- generated_at
+- data (JSON or file reference)
+
+			----------------------------------------------------------------
+
+CONTROLLERS
+
+CONTROLLER 1: AuthController
+------------------------------
+Handles login, logout, and registration for all users.
+
+Actions / Methods:
+- showLoginForm()      --> Opens the login page
+- login()              --> Checks credentials and gives access
+- logout()             --> Logs user out and clears session
+- showRegisterForm()   --> Opens the customer registration form
+- register()           --> Saves the new customer to database
+- showChangePassword() --> Opens change password form
+- changePassword()     --> Saves the new password
+
+
+CONTROLLER 2: DashboardController
+-----------------------------------
+Shows the main homepage after login.
+
+Actions / Methods:
+- index()   --> Shows dashboard with summary cards:
+                Admin sees: total active policies, total claims
+                pending, revenue this month, upcoming renewals,
+                lapsed policies count.
+                Customer sees: their active policies, claim
+                status, next payment due date.
+
+
+CONTROLLER 3: CustomerController
+----------------------------------
+Handles all customer profile management (admin side).
+
+Actions / Methods:
+- index()    --> List all customers
+- create()   --> Form to add a new customer
+- store()    --> Save customer to database
+- show()     --> View customer profile with their policies
+- edit()     --> Edit customer information
+- update()   --> Save changes
+- destroy()  --> Delete customer (admin only)
+- search()   --> Search by name, phone, customer ID
+
+
+CONTROLLER 4: VehicleController
+---------------------------------
+Handles all vehicle information management.
+
+Actions / Methods:
+- index()    --> List all vehicles
+- create()   --> Form to add a new vehicle
+- store()    --> Save vehicle to database
+- show()     --> View one vehicle's full details
+- edit()     --> Edit vehicle information
+- update()   --> Save changes
+- destroy()  --> Delete vehicle (admin only)
+- search()   --> Search by vehicle number, engine number,
+                 body number, owner name
+
+
+CONTROLLER 5: EstimateController
+----------------------------------
+Handles generating insurance quotes / estimates.
+
+Actions / Methods:
+- index()    --> List all estimates
+- create()   --> Form to create a new estimate
+- store()    --> Save estimate and calculate premium
+- show()     --> View one estimate with full details
+- edit()     --> Edit estimate
+- update()   --> Save changes
+- destroy()  --> Delete estimate
+- print()    --> Generate printable estimate document
+
+
+CONTROLLER 6: InsurancePolicyController
+-----------------------------------------
+Handles the full insurance policy lifecycle.
+
+Actions / Methods:
+- index()        --> List all policies (with status filter)
+- create()       --> Form to create a new policy
+- store()        --> Save the policy to database
+- show()         --> View full policy details
+- edit()         --> Edit policy information
+- update()       --> Save changes
+- destroy()      --> Cancel / delete policy (admin only)
+- renew()        --> Renew an expiring policy
+- generateDoc()  --> Generate downloadable policy document PDF
+- lapsedList()   --> Show all lapsed policies
+- renewalDue()   --> Show policies due for renewal
+
+
+CONTROLLER 7: BillingController
+---------------------------------
+Handles payment and billing document management.
+
+Actions / Methods:
+- index()    --> List all billing records
+- create()   --> Form to create a billing entry
+- store()    --> Save billing record to database
+- show()     --> View one billing document
+- print()    --> Generate printable PDF bill
+- markPaid() --> Mark a payment as completed
+
+
+CONTROLLER 8: ClaimController
+-------------------------------
+Handles accident claims filed by customers.
+
+Actions / Methods:
+- index()    --> List all claims (with status filter)
+- create()   --> Form for customer to file a claim
+- store()    --> Save claim to database
+- show()     --> View one claim with full details
+- edit()     --> Edit claim details
+- update()   --> Save changes
+- approve()  --> Admin approves the claim
+- reject()   --> Admin rejects the claim
+- print()    --> Generate printable claim report
+
+
+CONTROLLER 9: CompanyExpenseController
+----------------------------------------
+Handles recording and viewing company expenses.
+
+Actions / Methods:
+- index()    --> List all company expenses
+- create()   --> Form to add a new expense
+- store()    --> Save expense to database
+- show()     --> View one expense record
+- edit()     --> Edit expense
+- update()   --> Save changes
+- destroy()  --> Delete expense (admin only)
+
+
+CONTROLLER 10: ReportController
+---------------------------------
+Handles generating and exporting all reports.
+
+Actions / Methods:
+- monthlySalesReport()   --> Monthly policy sales report
+- vehicleWiseReport()    --> Analysis by vehicle type/model
+- claimsReport()         --> All claims: pending, approved, rejected
+- renewalsDueReport()    --> Policies expiring soon
+- lapsedPoliciesReport() --> Policies that have expired without renewal
+- exportPDF()            --> Export any report to PDF
+- exportExcel()          --> Export any report to Excel
+
+
+----------------------------------------------------------------
+ROUTES
+----------------------------------------------------------------
+
+AUTH ROUTES:
+GET  /login                    --> AuthController@showLoginForm
+POST /login                    --> AuthController@login
+POST /logout                   --> AuthController@logout
+GET  /register                 --> AuthController@showRegisterForm
+POST /register                 --> AuthController@register
+GET  /change-password          --> AuthController@showChangePassword
+POST /change-password          --> AuthController@changePassword
+
+
+ADMIN ROUTES:
+GET  /admin/dashboard          --> DashboardController@index
+
+
+CUSTOMER ROUTES (Admin manages all, customer sees their own):
+GET  /customers                --> CustomerController@index
+GET  /customers/create         --> CustomerController@create
+POST /customers                --> CustomerController@store
+GET  /customers/{id}           --> CustomerController@show
+GET  /customers/{id}/edit      --> CustomerController@edit
+PUT  /customers/{id}           --> CustomerController@update
+DELETE /customers/{id}         --> CustomerController@destroy
+GET  /customers/search         --> CustomerController@search
+
+
+VEHICLE ROUTES:
+GET  /vehicles                 --> VehicleController@index
+GET  /vehicles/create          --> VehicleController@create
+POST /vehicles                 --> VehicleController@store
+GET  /vehicles/{id}            --> VehicleController@show
+GET  /vehicles/{id}/edit       --> VehicleController@edit
+PUT  /vehicles/{id}            --> VehicleController@update
+DELETE /vehicles/{id}          --> VehicleController@destroy
+GET  /vehicles/search          --> VehicleController@search
+
+
+ESTIMATE ROUTES:
+GET  /estimates                --> EstimateController@index
+GET  /estimates/create         --> EstimateController@create
+POST /estimates                --> EstimateController@store
+GET  /estimates/{id}           --> EstimateController@show
+GET  /estimates/{id}/edit      --> EstimateController@edit
+PUT  /estimates/{id}           --> EstimateController@update
+DELETE /estimates/{id}         --> EstimateController@destroy
+GET  /estimates/{id}/print     --> EstimateController@print
+
+
+POLICY ROUTES:
+GET  /policies                        --> InsurancePolicyController@index
+GET  /policies/create                 --> InsurancePolicyController@create
+POST /policies                        --> InsurancePolicyController@store
+GET  /policies/{id}                   --> InsurancePolicyController@show
+GET  /policies/{id}/edit              --> InsurancePolicyController@edit
+PUT  /policies/{id}                   --> InsurancePolicyController@update
+DELETE /policies/{id}                 --> InsurancePolicyController@destroy
+POST /policies/{id}/renew             --> InsurancePolicyController@renew
+GET  /policies/{id}/generate-document --> InsurancePolicyController@generateDoc
+GET  /policies/lapsed                 --> InsurancePolicyController@lapsedList
+GET  /policies/renewals-due           --> InsurancePolicyController@renewalDue
+
+
+BILLING ROUTES:
+GET  /billing                  --> BillingController@index
+GET  /billing/create           --> BillingController@create
+POST /billing                  --> BillingController@store
+GET  /billing/{id}             --> BillingController@show
+GET  /billing/{id}/print       --> BillingController@print
+POST /billing/{id}/mark-paid   --> BillingController@markPaid
+
+
+CLAIM ROUTES:
+GET  /claims                   --> ClaimController@index
+GET  /claims/create            --> ClaimController@create
+POST /claims                   --> ClaimController@store
+GET  /claims/{id}              --> ClaimController@show
+GET  /claims/{id}/edit         --> ClaimController@edit
+PUT  /claims/{id}              --> ClaimController@update
+POST /claims/{id}/approve      --> ClaimController@approve
+POST /claims/{id}/reject       --> ClaimController@reject
+GET  /claims/{id}/print        --> ClaimController@print
+
+
+EXPENSE ROUTES:
+GET  /expenses                 --> CompanyExpenseController@index
+GET  /expenses/create          --> CompanyExpenseController@create
+POST /expenses                 --> CompanyExpenseController@store
+GET  /expenses/{id}            --> CompanyExpenseController@show
+GET  /expenses/{id}/edit       --> CompanyExpenseController@edit
+PUT  /expenses/{id}            --> CompanyExpenseController@update
+DELETE /expenses/{id}          --> CompanyExpenseController@destroy
+
+
+REPORT ROUTES:
+GET  /reports/monthly-sales    --> ReportController@monthlySalesReport
+GET  /reports/vehicle-wise     --> ReportController@vehicleWiseReport
+GET  /reports/claims           --> ReportController@claimsReport
+GET  /reports/renewals-due     --> ReportController@renewalsDueReport
+GET  /reports/lapsed-policies  --> ReportController@lapsedPoliciesReport
+GET  /reports/{type}/export-pdf   --> ReportController@exportPDF
+GET  /reports/{type}/export-excel --> ReportController@exportExcel
+
+				
+						----------------------------------------------------------------
+
+PANELS AND THEIR FUNCTIONALITY
+
+ADMIN PANEL:
+------------
+URL: /admin/dashboard
+
+What the admin sees on the dashboard:
+- Total active policies
+- Total claims pending approval
+- Revenue collected this month
+- Policies due for renewal soon
+- Lapsed policies count
+- Recent claim filings
+
+Sidebar menu of admin panel:
+1. Dashboard
+2. Customers (all registered customers)
+3. Vehicles (all vehicle records)
+4. Estimates (all quotes generated)
+5. Insurance Policies (all policies with status filter)
+6. Billing (all payment and billing records)
+7. Claims (all claims: pending, approved, rejected)
+8. Company Expenses (internal expense tracking)
+9. Reports
+
+
+CUSTOMER PANEL:
+---------------
+URL: /customer/dashboard
+
+What the customer sees:
+- Their active policy details
+- Next payment due date
+- Status of any filed claim
+- Quick link to buy a new policy
+
+Sidebar menu:
+1. Dashboard
+2. My Profile (view and edit personal info)
+3. Get a Quote (estimate / quote form)
+4. Buy Insurance Policy (application form + payment)
+5. My Policies (list of active and expired policies)
+6. File a Claim (accident claim form)
+7. My Claims (status tracker for filed claims)
+8. Billing History (all past payments and bills)
+9. Change Password
+
+				----------------------------------------------------------------
+
+MODULES EXPLAINED ONE BY ONE
+
+
+MODULE 1: LOGIN MODULE
+-----------------------
+Purpose: To allow only authorized users to access the system.
+
+What happens:
+- Admin logs in with admin username and password
+- Customer logs in with their registered username and password
+- If credentials are wrong, access is denied
+- Each user sees only their own panel after login
+
+Forms needed:
+- Login Form (username + password)
+- Registration Form (for new customers)
+- Change Password Form
+
+
+MODULE 2: CUSTOMER INFORMATION MODULE
+---------------------------------------
+Purpose: To store and manage all customer personal records.
+
+What happens:
+- Customer registers and their profile is saved
+- Admin can view, edit, and manage all customer records
+- Customer profile stores: name, address, phone, address proof
+- All policies and claims are linked to the customer profile
+
+Forms needed:
+- Customer Registration Form
+- Edit Customer Form
+
+List pages:
+- All Customers List with search bar
+
+
+MODULE 3: VEHICLE INFORMATION MODULE
+--------------------------------------
+Purpose: To store complete details of each vehicle to be insured.
+
+What happens:
+- When a customer wants to buy insurance, their vehicle details
+  are first recorded in the system
+- Each vehicle has a unique combination of body number and
+  engine number
+- Vehicle rate (market value) is stored as it determines the
+  insurance premium amount
+- All policies and claims are linked to a specific vehicle
+
+Forms needed:
+- Add Vehicle Form
+- Edit Vehicle Form
+
+List pages:
+- All Vehicles List
+- Search by vehicle number, engine number, owner name
+
+
+MODULE 4: ESTIMATE MODULE
+---------------------------
+Purpose: To generate an insurance quote for the customer before
+they commit to buying a policy.
+
+What happens:
+- Customer or admin fills in vehicle details and selects a
+  policy type (comprehensive, third-party, etc.)
+- System calculates and displays the estimated premium
+- Customer can review the estimate and then proceed to buy
+- Estimate can be printed and shared with the customer
+
+Estimate includes:
+- Customer info
+- Vehicle name, model, rate
+- Vehicle warranty
+- Policy type selected
+- Estimated premium amount
+
+Forms needed:
+- Create Estimate Form
+
+Print:
+- Printable Estimate / Quote document
+
+
+MODULE 5: INSURANCE PROCESS MODULE
+-------------------------------------
+Purpose: To formally create and manage the insurance policy
+after the customer decides to buy.
+
+What happens:
+- Customer fills the full application form online
+- System records all details: personal info, vehicle info,
+  policy type, policy start date, policy duration
+- A unique policy number is generated
+- Payment is made and billing record is created
+- Policy document is generated with all details
+- Customer can download the policy document
+- Policy status is tracked: active, expired, lapsed, cancelled
+
+Forms needed:
+- Insurance Application Form (full details)
+- Policy Renewal Form
+
+Documents generated:
+- Policy Document PDF (downloadable by customer)
+
+
+MODULE 6: COMPANY BILLING POLICY MODULE
+-----------------------------------------
+Purpose: To generate bills and record all payment transactions.
+
+What happens:
+- After policy is created, a billing document is generated
+- Bill includes: customer details, policy number, vehicle info,
+  amount, payment date, bill number
+- Admin can view all bills and their payment status
+- Customer can view their billing history
+- Bills can be printed as PDF
+
+Forms needed:
+- Create Billing Record Form
+
+Print:
+- Printable PDF Bill / Invoice
+
+
+MODULE 7: CLAIM DETAILS MODULE
+--------------------------------
+Purpose: To manage accident claims filed by customers.
+
+What happens:
+- Customer logs in and fills the claim form after an accident
+- Claim form captures: place of accident, date of accident,
+  insured amount, claimable amount
+- The claim is linked to the customer's active policy
+- Admin reviews the claim and checks if policy is valid
+- Admin either approves or rejects the claim
+- If approved, the claimable amount is processed
+- Claim status is updated and customer can track it
+
+Forms needed:
+- Claim Filing Form (for customer)
+- Claim Review Form (for admin to approve/reject)
+
+List pages:
+- All Claims with status filter (pending/approved/rejected)
+
+
+MODULE 8: COMPANY EXPENSES MODULE
+-----------------------------------
+Purpose: To record all internal expenses of the insurance
+company for financial management.
+
+What happens:
+- Admin records each company expense with: type, amount, date
+- Examples of expenses: rent, salaries, utilities, marketing
+- All expenses are stored with date for monthly tracking
+- This data feeds into the financial reports
+
+Forms needed:
+- Add Expense Form
+- Edit Expense Form
+
+List pages:
+- All Expenses List with date filter
+
+
+MODULE 9: REPORTS MODULE
+--------------------------
+Purpose: Gives management a complete view of business
+performance and helps in making decisions.
+
+Reports available:
+
+1. Monthly Sales of Policies Report
+   - How many policies were sold each month
+   - Total premium revenue collected
+   - Which policy type was most popular
+   - Month-wise comparison
+
+2. Vehicle Wise Analysis Report
+   - Which vehicle models/types are most insured
+   - Premium amounts by vehicle category
+   - Risk analysis by vehicle type
+
+3. Claims Report
+   - Total claims filed in a period
+   - Claims approved vs rejected
+   - Total claimable amount paid out
+   - Claims pending approval
+
+4. Policies Due for Renewal Report
+   - List of all policies expiring in the next 30/60/90 days
+   - Customer contact info for follow-up
+   - Policy details and renewal amount
+
+5. Lapsed Policies Report
+   - Policies that have expired without renewal
+   - Customer details for re-engagement
+   - Date of lapse and original policy info
+
+All reports can be:
+- Viewed on screen
+- Exported to PDF
+- Exported to Excel
